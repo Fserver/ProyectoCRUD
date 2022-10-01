@@ -120,24 +120,62 @@ function actualizarCliente() {
 }
 
 (function () {
-    //alert("hola")
-
     listaClientes = leerLocalStorage()
 
+    //Imprime cada registro del LocalStorage en el <select> de la página ventas.html
     let selectClientes = document.getElementById('selectClientes')
-    let cliente
+    let clienteVenta
+    listaClientes.forEach((element) => {
 
-    listaClientes.forEach((element, index) => {
-
-        cliente = document.createElement('option')
-        cliente.value = element.cedula
-        cliente.text = element.nombre
+        clienteVenta = document.createElement('option')
+        clienteVenta.value = element.cedula
+        clienteVenta.text = element.nombre
         try {
-            selectClientes.appendChild(cliente)
+            selectClientes.appendChild(clienteVenta)
+        } catch (error) { }
+    });
+
+
+
+
+    //Imprime cada registro del LocalStorage en el <tbody> de la página index.html
+    let tbodyClientes = document.getElementById('tbody')
+    let tableRow, clienteCedula, clienteNombre, clienteVentas, totalVentas, temporal = 0
+
+    listaClientes.forEach(element => {
+        tableRow = document.createElement('tr')
+
+        clienteCedula = document.createElement('td')
+        clienteCedula.innerText = element.cedula
+
+        clienteNombre = document.createElement('td')
+        clienteNombre.innerText = element.nombre
+
+        clienteVentas = document.createElement('td')
+
+        totalVentas = document.createElement('td')
+        
+        element.ventas.forEach(element2 => {
+            clienteVentas.innerText += JSON.stringify(element2.producto) + ", "
+
+            //Se hace la sumatoria de las ventas por Cliente
+            temporal += parseInt(element2.valor)
+        });
+        totalVentas.innerText = temporal
+        temporal = 0
+
+        tableRow.appendChild(clienteCedula)
+        tableRow.appendChild(clienteNombre)
+        tableRow.appendChild(clienteVentas)
+        tableRow.appendChild(totalVentas)
+
+        try {
+            tbodyClientes.appendChild(tableRow)
         } catch (error) { }
     });
 
 })()
+
 
 //Aqui se esconde como imprimir todas las ventas por 1 cliente
 function buscarVenta() {
@@ -164,12 +202,6 @@ function buscarVenta() {
             campoID = document.getElementById('idVentas').value = ""
             alert("Ese registro no existe")
         }
-        /*
-            //Sirve para imprimir todas las ventas
-            ventaEncontrada.forEach(element => {
-                console.log(element);
-            });
-        */
     } else alert("El campo ID es requerido.")
 }
 
@@ -276,7 +308,7 @@ function eliminarVenta() {
             localStorage.setItem(0, JSON.stringify(listaClientes))
 
             document.getElementById('formularioVentas').reset()
-            
+
             alert("Se ha eliminado el registro.")
         }
     } else alert("El campo ID es requerido.")
