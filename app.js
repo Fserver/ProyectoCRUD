@@ -1,22 +1,15 @@
-let listaClientes, campoCedula, campoNombre
+let listaClientes = [], campoCedula, campoNombre
 let cantidadRegistros = 0
 
 function leerLocalStorage() {
     listaClientes = []
 
-    let hayItems = true
-    let contador = 0
-    while (hayItems) {
+    JSON.parse(localStorage.getItem(0)) !== null ?
+        listaClientes = JSON.parse(localStorage.getItem(0))
+        :
+        console.log("No hay localStorage en el momento");
 
-        if (localStorage.getItem(contador)) {
-            //Para leer el objeto en localStorage
-            listaClientes.push(JSON.parse(localStorage.getItem(contador)))
-            contador++
-
-        } else hayItems = false
-    }
-    console.log(listaClientes);
-    return contador
+    return listaClientes
 }
 
 function buscarCliente() {
@@ -24,18 +17,19 @@ function buscarCliente() {
 
     campoCedula = document.getElementById('campoCedula').value
 
-    cantidadRegistros = leerLocalStorage()
+    if (campoCedula !== "") {
+        listaClientes = leerLocalStorage()
 
-    if (cantidadRegistros > 0) {
+        let registroEncontrado = listaClientes.find(elemento => elemento.cedula == campoCedula)
 
-        listaClientes.forEach((element, index) => {
+        if (registroEncontrado !== undefined) {
+            document.getElementById('campoNombre').value = registroEncontrado.nombre
+        } else {
+            document.getElementById('campoNombre').value = ""
+            alert("Este cliente No existe.")
+        }
 
-            if (listaClientes[index].cedula == campoCedula) {
-                document.getElementById('campoNombre').value = element.nombre
-            }
-        });
-    }
-
+    } else alert("Debe llenar ambos campos para Registrar.")
 }
 
 function registrarCliente() {
@@ -47,81 +41,79 @@ function registrarCliente() {
     campoNombre = document.getElementById('campoNombre').value
     //console.log(campoNombre);
 
-    cantidadRegistros = leerLocalStorage()
+    if (campoCedula !== "" && campoNombre !== "") {
+        listaClientes = leerLocalStorage()
 
-    console.log("Registros Anteriores: " + cantidadRegistros);
-
-
-    if (cantidadRegistros == 0) {
-
-        listaClientes.push({
-            cedula: campoCedula,
-            nombre: campoNombre,
-            ventas: []
-        },)
-        //Para colocar el objeto en localStorage
-        listaClientes.forEach((element, index) => {
-            localStorage.setItem(index, JSON.stringify(element))
-            alert("Registro añadido!")
-        });
-
-    } else if (cantidadRegistros !== 0) {
-
-        let siExiste = 0
-        listaClientes.forEach((element, index) => {
-
-            if (listaClientes[index].cedula == campoCedula) siExiste++
-        });
-
-        if (siExiste == 0) {
-            let element2 = {
+        if (listaClientes.find(elemento => elemento.cedula == campoCedula) == undefined) {
+            listaClientes.push({
                 cedula: campoCedula,
                 nombre: campoNombre,
                 ventas: []
-            }
-            //Para colocar el objeto en localStorage
-            localStorage.setItem(cantidadRegistros, JSON.stringify(element2))
-            alert("Registro añadido!")
+            },)
+            localStorage.clear()
+            localStorage.setItem(0, JSON.stringify(listaClientes))
         } else {
-            alert("Esta cédula ya está registrada!")
+            alert("Este cliente ya existe y no puede ser añadido nuevamente")
         }
-    }
 
-    console.log("Registros Actuales: " + leerLocalStorage());
+        console.log(listaClientes);
+
+        document.getElementById('formularioClientes').reset()
+    } else alert("Debe llenar ambos campos para Registrar.")
+}
+
+function eliminarCliente() {
+    event.preventDefault()
+
+    campoCedula = document.getElementById('campoCedula').value
+
+    if (campoCedula !== "") {
+        listaClientes = leerLocalStorage()
+
+        let registroEncontrado = listaClientes.find(elemento => elemento.cedula == campoCedula)
+
+        if (registroEncontrado !== undefined) {
+            listaClientes = listaClientes.filter( registro => registro.cedula !== registroEncontrado.cedula)
+            
+            localStorage.clear()
+            localStorage.setItem(0, JSON.stringify(listaClientes))
+
+            alert(registroEncontrado.nombre+" fue eliminado.");
+        } else {
+            document.getElementById('campoNombre').value = ""
+            alert("Este cliente No existe.")
+        }
+    } else alert("Debe digitar una cédula existente para eliminar.")
 
     document.getElementById('formularioClientes').reset()
 }
 
-
-//ARREGLAR ESTO
-function eliminarCliente() {
+function actualizarCliente() {
     event.preventDefault()
-    
+
     campoCedula = document.getElementById('campoCedula').value
 
-    listaClientes = []
+    if (campoCedula !== "") {
+        listaClientes = leerLocalStorage()
 
-    let hayItems = true
-    let contador = 0
-    while (hayItems) {
+        let registroEncontrado = listaClientes.find(elemento => elemento.cedula == campoCedula)
 
-        if (localStorage.getItem(contador)) {
-            //Para leer el objeto en localStorage
-            listaClientes.push(JSON.parse(localStorage.getItem(contador)))
-            contador++
+        if (registroEncontrado !== undefined) {
 
-        } else hayItems = false
-    }
-    console.log(listaClientes);
 
-    if (contador > 0) {
 
-        listaClientes.forEach((element, index) => {
 
-            if (listaClientes[index].cedula == campoCedula) {
-                localStorage.removeItem(index)
-                alert("Registro Eliminado.")
-            }
-        });
-    }
+            //listaClientes = listaClientes.filter( registro => registro.cedula == registroEncontrado.cedula)
+            
+            localStorage.clear()
+            localStorage.setItem(0, JSON.stringify(listaClientes))
+            
+            alert(registroEncontrado.nombre+" fue actualizado.");
+        } else {
+            document.getElementById('campoNombre').value = ""
+            alert("Este cliente No existe.")
+        }
+    } else alert("Debe llenar ambos campos para Actualizar.")
+
+    document.getElementById('formularioClientes').reset()
 }
