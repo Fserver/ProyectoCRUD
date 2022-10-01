@@ -52,6 +52,36 @@
             </p>
 
             <select class="form-select" id="selectClientes"></select>
+
+            <form id="formularioVentas">
+                <div class="mb-3">
+                    <label class="form-label">ID</label>
+                    <input type="text" class="form-control" id="idVentas" required>
+                </div>
+
+                <div class="d-grid gap-1">
+                    <button onclick="buscarVenta()" class="btn btn-primary">Buscar</button>
+                </div>
+
+                <hr>
+
+                <div class="mb-3">
+                    <label class="form-label">PRODUCTO</label>
+                    <input type="text" class="form-control" id="producto">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">FECHA DE VENTA</label>
+                    <input type="date" class="form-control" id="fecha">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">VALOR</label>
+                    <input type="text" class="form-control" id="valor">
+                </div>
+
+                <button onclick="registrarVenta()" class="btn btn-success">Registrar</button>
+                <button onclick="actualizarVenta()" class="btn btn-warning">Actualizar</button>
+                <button onclick="eliminarVenta()" class="btn btn-danger">Eliminar</button>
+            </form>
         </div>
     </div>
 
