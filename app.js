@@ -132,11 +132,12 @@ function actualizarCliente() {
         cliente = document.createElement('option')
         cliente.value = element.cedula
         cliente.text = element.nombre
-        selectClientes.appendChild(cliente)
+        try {
+            selectClientes.appendChild(cliente)
+        } catch (error) { }
     });
 
 })()
-
 
 //Aqui se esconde como imprimir todas las ventas por 1 cliente
 function buscarVenta() {
@@ -221,4 +222,39 @@ function registrarVenta() {
 
         document.getElementById('formularioVentas').reset()
     } else alert("Debe llenar los campos para registrar una venta.")
+}
+
+function actualizarVenta() {
+    event.preventDefault()
+
+    selectCliente = document.getElementById('selectClientes').value
+    //console.log(selectCliente);
+
+    campoID = document.getElementById('idVentas').value
+
+    if (campoID !== "") {
+        listaClientes = leerLocalStorage()
+
+        let registroEncontrado = listaClientes.find(elemento => elemento.cedula == selectCliente)
+        //console.log(registroEncontrado);
+        let ventaEncontrada = registroEncontrado.ventas.find(element => element.id == campoID)
+        //console.log(ventaEncontrada);
+
+        if (ventaEncontrada != undefined) {
+            ventaEncontrada.producto = document.getElementById('producto').value
+            ventaEncontrada.fecha = document.getElementById('fecha').value
+            ventaEncontrada.valor = document.getElementById('valor').value
+
+            localStorage.clear()
+            localStorage.setItem(0, JSON.stringify(listaClientes))
+            alert("Se ha realizado la actualización.")
+        } else {
+            campoID = document.getElementById('idVentas').value = ""
+            alert("Ese registro no existe")
+        }
+    } else alert("El campo ID es requerido.")
+}
+
+function eliminarVenta() {
+    
 }
