@@ -154,7 +154,7 @@ function buscarVenta() {
         let registroEncontrado = listaClientes.find(elemento => elemento.cedula == selectCliente)
         //console.log(registroEncontrado);
         let ventaEncontrada = registroEncontrado.ventas.find(element => element.id == campoID)
-        console.log(ventaEncontrada);
+        //console.log(ventaEncontrada);
 
         if (ventaEncontrada != undefined) {
             campoProducto = document.getElementById('producto').value = ventaEncontrada.producto
@@ -256,5 +256,28 @@ function actualizarVenta() {
 }
 
 function eliminarVenta() {
-    
+    event.preventDefault()
+
+    selectCliente = document.getElementById('selectClientes').value
+    //console.log(selectCliente);
+
+    campoID = document.getElementById('idVentas').value
+
+    if (campoID !== "") {
+        listaClientes = leerLocalStorage()
+
+        let registroEncontrado = listaClientes.find(elemento => elemento.cedula == selectCliente)
+        //console.log(registroEncontrado);
+        if (registroEncontrado) {
+
+            registroEncontrado.ventas = registroEncontrado.ventas.filter(element => element.id != campoID)
+
+            localStorage.clear()
+            localStorage.setItem(0, JSON.stringify(listaClientes))
+
+            document.getElementById('formularioVentas').reset()
+            
+            alert("Se ha eliminado el registro.")
+        }
+    } else alert("El campo ID es requerido.")
 }
