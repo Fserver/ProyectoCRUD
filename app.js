@@ -1,5 +1,4 @@
 let listaClientes = [], campoCedula, campoNombre
-let cantidadRegistros = 0
 
 function leerLocalStorage() {
     listaClientes = []
@@ -73,12 +72,12 @@ function eliminarCliente() {
         let registroEncontrado = listaClientes.find(elemento => elemento.cedula == campoCedula)
 
         if (registroEncontrado !== undefined) {
-            listaClientes = listaClientes.filter( registro => registro.cedula !== registroEncontrado.cedula)
-            
+            listaClientes = listaClientes.filter(registro => registro.cedula !== registroEncontrado.cedula)
+
             localStorage.clear()
             localStorage.setItem(0, JSON.stringify(listaClientes))
 
-            alert(registroEncontrado.nombre+" fue eliminado.");
+            alert(registroEncontrado.nombre + " fue eliminado.");
         } else {
             document.getElementById('campoNombre').value = ""
             alert("Este cliente No existe.")
@@ -102,15 +101,15 @@ function actualizarCliente() {
 
             campoNombre = document.getElementById('campoNombre').value
 
-            alert(registroEncontrado.nombre+" fue actualizado a: "+campoNombre);
+            alert(registroEncontrado.nombre + " fue actualizado a: " + campoNombre);
             registroEncontrado.nombre = campoNombre
 
             console.log(registroEncontrado);
             console.log(listaClientes);
-            
+
             localStorage.clear()
             localStorage.setItem(0, JSON.stringify(listaClientes))
-            
+
         } else {
             document.getElementById('campoNombre').value = ""
             alert("Este cliente No existe.")
@@ -119,3 +118,21 @@ function actualizarCliente() {
 
     document.getElementById('formularioClientes').reset()
 }
+
+(function () {
+    //alert("hola")
+
+    listaClientes = leerLocalStorage()
+
+    let selectClientes = document.getElementById('selectClientes')
+    let cliente
+
+    listaClientes.forEach((element, index) => {
+
+        cliente = document.createElement('option')
+        cliente.value = element.cedula
+        cliente.text = element.nombre
+        selectClientes.appendChild(cliente)
+    });
+
+})()
