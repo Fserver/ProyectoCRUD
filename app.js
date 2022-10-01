@@ -100,15 +100,17 @@ function actualizarCliente() {
 
         if (registroEncontrado !== undefined) {
 
+            campoNombre = document.getElementById('campoNombre').value
 
+            alert(registroEncontrado.nombre+" fue actualizado a: "+campoNombre);
+            registroEncontrado.nombre = campoNombre
 
-
-            //listaClientes = listaClientes.filter( registro => registro.cedula == registroEncontrado.cedula)
+            console.log(registroEncontrado);
+            console.log(listaClientes);
             
             localStorage.clear()
             localStorage.setItem(0, JSON.stringify(listaClientes))
             
-            alert(registroEncontrado.nombre+" fue actualizado.");
         } else {
             document.getElementById('campoNombre').value = ""
             alert("Este cliente No existe.")
